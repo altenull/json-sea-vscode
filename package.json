@@ -1,21 +1,24 @@
 {
   "name": "json-sea-vscode",
   "displayName": "JSON SEA",
-  "description": "JSON Sea VS Code extension",
+  "description": "JSON SEA VS Code extension",
   "version": "0.0.1",
+  "publisher": "altenull",
   "engines": {
     "vscode": "^1.84.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
-  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:json-sea-vscode.run"
+  ],
+  "main": "./build/ext-src/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "json-sea-vscode.helloWorld",
-        "title": "Hello World"
+        "command": "json-sea-vscode.run",
+        "title": "View with JSON Sea"
       }
     ]
   },
@@ -28,7 +31,9 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "build": "./scripts/build-non-split.js && tsc -p tsconfig.extension.json",
+    "watch-build": "nodemon --watch src --ext js,tsx,ts --exec \"yarn run build\""
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
@@ -43,8 +48,10 @@
     "eslint": "^8.41.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
+    "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
     "react-scripts": "^5.0.1",
+    "rewire": "^7.0.0",
     "ts-loader": "^9.4.3",
     "typescript": "^5.1.3",
     "webpack": "^5.85.0",
@@ -53,5 +60,17 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
