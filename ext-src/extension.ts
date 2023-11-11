@@ -22,9 +22,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 async function diveDeepJsonSea(context: vscode.ExtensionContext) {
   const currentTextEditor: vscode.TextEditor | undefined = vscode.window.visibleTextEditors[0];
+  const fileName = path.basename(currentTextEditor?.document.fileName);
 
   const WEBVIEW_VIEW_TYPE = 'jsonSeaWebview';
-  const TITLE = 'JSON SEA'; // Title of the panel displayed to the user
+  const TITLE = `JSON SEA (${fileName})`; // Title of the panel displayed to the user
 
   const panel = vscode.window.createWebviewPanel(WEBVIEW_VIEW_TYPE, TITLE, vscode.ViewColumn.Active, {
     enableScripts: true,
@@ -32,10 +33,8 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
     localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'build'))], // TODO: Check: 에제에서는 context.extensionUri 사용.
   });
 
-  const foundText = currentTextEditor?.document.getText();
-
   panel.webview.postMessage({
-    jsonData: foundText,
+    jsonData: currentTextEditor?.document.getText(),
   } as WebviewMessage);
 
   // const onActiveEditorChange = vscode.window.onDidChangeActiveTextEditor(
