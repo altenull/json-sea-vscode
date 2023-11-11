@@ -30,7 +30,7 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
   const panel = vscode.window.createWebviewPanel(WEBVIEW_VIEW_TYPE, TITLE, vscode.ViewColumn.Active, {
     enableScripts: true,
     retainContextWhenHidden: true, // TODO: Check: 다른 탭에서 다시 JSON SEA 탭으로 이동했을 때 데이터가 유지되는지 확인해볼것 / `retainContextWhenHidden`는 메모리 많이 소요되니 최후의 방법으로 쓸 것
-    localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'build'))], // TODO: Check: 에제에서는 context.extensionUri 사용.
+    localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'build')],
   });
 
   panel.webview.postMessage({

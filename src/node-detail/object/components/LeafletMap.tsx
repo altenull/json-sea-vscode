@@ -1,6 +1,7 @@
 import L, { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { memo, useCallback, useEffect, useRef } from 'react';
+import { assets } from '../../../environment';
 
 type Props = {
   latLng: LatLngTuple;
@@ -12,7 +13,7 @@ const _LeafletMap = ({ latLng }: Props) => {
   useEffect(() => {
     L.Marker.prototype.setIcon(
       L.icon({
-        iconUrl: '/map-marker.png',
+        iconUrl: assets.mapMarker,
       }),
     );
   }, []);
