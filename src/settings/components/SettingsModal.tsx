@@ -21,7 +21,11 @@ const _SettingsModal = ({ isModalOpen, closeModal }: Props) => {
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader>Settings</ModalHeader>
+            {/*
+             * Specify `text-foreground` class because color is overwriten for some reason. (extension rendered as <iframe>)
+             * Probably there is css code that changes <header> tag color (<ModalHeader> is rendered to <header>)
+             */}
+            <ModalHeader className="text-foreground">Settings</ModalHeader>
             <ModalBody>
               <Switch isSelected={isMinimapOn} onChange={toggleMinimap}>
                 Minimap
