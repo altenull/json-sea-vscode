@@ -19,4 +19,5 @@ export const externalLink = {
 export const assets = {
   ogImage: 'https://raw.githubusercontent.com/altenull/json-sea/main/public/og-image.png',
   mapMarker: 'https://raw.githubusercontent.com/altenull/json-sea/main/public/map-marker.png',
+  oceania: 'https://raw.githubusercontent.com/altenull/json-sea/main/public/oceania.png',
 };
