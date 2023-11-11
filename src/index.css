@@ -1,8 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* json-diagram */
+  .node-shell-base {
+    @apply relative flex max-w-nodeMaxWidth flex-col border-2 border-solid border-default-200 bg-background py-3 pl-3 hover:border-default-300;
+  }
+  .node-shell-object {
+    @apply min-w-nodeMinWidth rounded-bl-3xl rounded-tl-3xl py-3 pl-3;
+  }
+  .node-shell-array {
+    @apply max-h-arrayNodeSize min-h-arrayNodeSize min-w-arrayNodeSize max-w-arrayNodeSize rounded-full p-0;
+  }
+  .node-shell-primitive {
+    @apply min-w-nodeMinWidth rounded-bl-full rounded-tl-full py-nodePadding pl-nodePadding;
+  }
+  /**
+   * Set `rx` and `ry` instead of `border-radius`.
+   * The `border-radius` is not supported in `<rect>` tag.
+   */
+  .minimap-node-object {
+    rx: 8;
+    ry: 8;
+  }
+  .minimap-node-array {
+    /* arrayNodeSize(64) / 2 is 32 */
+    rx: 32;
+    ry: 32;
+  }
+  .minimap-node-primitive {
+    rx: 8;
+    ry: 8;
+  }
+  .react-flow-controls-button {
+    @apply border-x-1 border-y-0 border-solid border-border bg-background first:rounded-tl-md first:rounded-tr-md first:border-y-1 last:rounded-bl-md last:rounded-br-md last:border-y-1 hover:bg-default-100;
+  }
+  .react-flow-controls-button-icon {
+    @apply fill-default-700 stroke-default-700;
+  }
+
+  /* node-detail-panel */
+  .node-detail-panel {
+    @apply flex min-h-full min-w-nodeDetailPanelWidth max-w-nodeDetailPanelWidth flex-col overflow-auto border-l-1 border-solid border-l-border bg-cyan-50 p-4 dark:bg-cyan-900;
+  }
+  .leaflet-zoom-button-group {
+    @apply !border-1 border-solid !border-border shadow-none;
+  }
+  .leaflet-zoom-button {
+    @apply !h-6 !w-6 bg-background !leading-5 text-default-700 first:border-b-1 first:border-solid first:border-b-border hover:bg-default-100;
+  }
+  .leaflet-dark-tile {
+    /* [Leaflet Darkmode] https://blog.jamie.holdings/2022/05/15/dark-mode-for/ */
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+  }
+  .calendar-day {
+    @apply inline-flex h-7 w-7 items-center justify-center text-center text-xs text-default-600;
+  }
+
+  /* shared */
+  .blue-dot-for-node {
+    @apply absolute right-0 top-1/2  min-h-[10px] min-w-[10px] -translate-y-1/2 translate-x-[70%] rounded-full bg-blue-600;
+  }
+  .blue-dot-for-card {
+    @apply absolute right-0 top-[24px] min-h-[40px] min-w-[40px] translate-x-1/2 rounded-full bg-blue-600/40;
+  }
+}
+
+/**
+ * To remove attribution('React Flow' title under controls), need some money.
+ * @see https://reactflow.dev/docs/guides/remove-attribution/
+ */
+.react-flow__attribution {
+  background: transparent !important;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: var(--vscode-editor-font-family) !important;
-  background-color: var(--vscode-input-background) !important;
   height: 100vh;
 }
 
