@@ -2,10 +2,26 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { StorageKey, StorageKeyToValueTypeMap } from '../src/services/storage.service';
 
-export type WebviewMessage = {
-  jsonData: string;
+export type InitSettingItem = {
+  settingOption: StorageKey;
+  value: StorageKeyToValueTypeMap<StorageKey>;
 };
+
+export type WebviewMessage =
+  | {
+      command: 'json';
+      jsonData: string;
+    }
+  | {
+      command: 'init-settings'; // Extension(VS Code) -> React
+      settings: InitSettingItem[];
+    }
+  | {
+      command: 'update-setting'; // React -> Extension(VS Code)
+      setting: InitSettingItem;
+    };
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -33,7 +49,22 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
     localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'build')],
   });
 
+  const settings = ['settings:minimap', 'settings:nodePath'].map((storageKey) => {
+    const valueFromStorage = context.globalState.get<StorageKeyToValueTypeMap<StorageKey>>(storageKey);
+
+    return {
+      settingOption: storageKey,
+      value: !!valueFromStorage,
+    } as InitSettingItem;
+  });
+
   panel.webview.postMessage({
+    command: 'init-settings',
+    settings,
+  } as WebviewMessage);
+
+  panel.webview.postMessage({
+    command: 'json',
     jsonData: currentTextEditor?.document.getText(),
   } as WebviewMessage);
 
@@ -73,6 +104,18 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
   const styleUri = panel.webview.asWebviewUri(stylePathOnDisk);
 
   panel.webview.html = getWebviewContent(styleUri, scriptUri);
+
+  panel.webview.onDidReceiveMessage(
+    (message: WebviewMessage) => {
+      switch (message.command) {
+        case 'update-setting':
+          context.globalState.update(message.setting.settingOption, message.setting.value);
+          return;
+      }
+    },
+    undefined,
+    context.subscriptions,
+  );
 }
 
 function getWebviewContent(styleUri: vscode.Uri, scriptUri: vscode.Uri) {
@@ -94,7 +137,7 @@ function getWebviewContent(styleUri: vscode.Uri, scriptUri: vscode.Uri) {
       <html lang="en">
       <head>
         <meta charset="UTF-8">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'unsafe-eval' vscode-resource: data: https: http:;">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'unsafe-eval' vscode-resource: data: http: https:;">
 
         <link rel="stylesheet" type="text/css" href="${styleUri}">
       </head>

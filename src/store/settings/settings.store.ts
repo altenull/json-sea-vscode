@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { localStorageService } from '../../services/local-storage.service';
+import { InitSettingItem } from '../../../ext-src/extension';
+import { storageService } from '../../services/storage.service';
 
 type State = {
   isMinimapOn: boolean;
@@ -7,25 +8,45 @@ type State = {
 };
 
 type Actions = {
+  initSettings: (settings: InitSettingItem[]) => void;
   toggleMinimap: () => void;
   toggleNodePath: () => void;
   resetSettingsStore: () => void;
 };
 
 const initialState: State = {
-  isMinimapOn: localStorageService.getItem('settings:minimap'),
-  isNodePathOn: localStorageService.getItem('settings:nodePath'),
+  isMinimapOn: true,
+  isNodePathOn: true,
 };
 
 export const useSettingsStore = create<State & Actions>((set, get) => ({
   ...initialState,
+  initSettings: (settings: InitSettingItem[]) => {
+    const newState = settings.reduce(
+      (acc: State, { settingOption, value }) =>
+        settingOption === 'settings:minimap'
+          ? {
+              ...acc,
+              isMinimapOn: value,
+            }
+          : settingOption === 'settings:nodePath'
+          ? {
+              ...acc,
+              isNodePathOn: value,
+            }
+          : acc,
+      initialState,
+    );
+
+    set(() => newState);
+  },
   toggleMinimap: () => {
     const prev = get().isMinimapOn;
 
     set(() => ({
       isMinimapOn: !prev,
     }));
-    localStorageService.setItem('settings:minimap', !prev);
+    storageService.setItem('settings:minimap', !prev);
   },
   toggleNodePath: () => {
     const prev = get().isNodePathOn;
@@ -33,7 +54,7 @@ export const useSettingsStore = create<State & Actions>((set, get) => ({
     set(() => ({
       isNodePathOn: !prev,
     }));
-    localStorageService.setItem('settings:nodePath', !prev);
+    storageService.setItem('settings:nodePath', !prev);
   },
   resetSettingsStore: () => set(initialState),
 }));
