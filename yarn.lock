@@ -4128,6 +4128,11 @@
   resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.6.tgz#d12451beaeb9c3838f12024580dc500b7e88b0ad"
   integrity sha512-HYtNooPvUY9WAVRBr4u+4Qa9fYD1ze2IUlAD3HoA6oehn1taGwBx3Oa52U4mTslTS+GAExKpaFu39Y5xUEwfjg==
 
+"@types/vscode-webview@^1.57.4":
+  version "1.57.4"
+  resolved "https://registry.yarnpkg.com/@types/vscode-webview/-/vscode-webview-1.57.4.tgz#12b0dd73afeeaed5a1f48dbdb3824af75773bc8c"
+  integrity sha512-RrVw9s6gBJuY1IkUHMNznWgj/ktjwLpATyOTcKxUDIbbp7AQeK7S0E1+P/8Z75OgAW13OMqSAmaiuWw25dh59Q==
+
 "@types/vscode@^1.84.0":
   version "1.84.1"
   resolved "https://registry.yarnpkg.com/@types/vscode/-/vscode-1.84.1.tgz#2e89dc074743737209f1769f7e7762499edaca71"
