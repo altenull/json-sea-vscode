@@ -1,9 +1,8 @@
 import { Image } from '@nextui-org/image';
 import { memo } from 'react';
-import { openLinkAsNewTab } from '../../../utils/window.util';
 import { ImageSrc } from '../types/media-src.type';
-import { MediaViewerBox } from './MediaViewerBox';
 import { MIMETypeAndSize } from './MIMETypeAndSize';
+import { MediaViewerBox } from './MediaViewerBox';
 
 type Props = {
   imageSrc: ImageSrc;
@@ -12,15 +11,17 @@ type Props = {
 const _ImageViewer = ({ imageSrc }: Props) => {
   return (
     <MediaViewerBox>
-      <Image
-        className="mx-auto block h-[120px] w-auto cursor-pointer"
-        removeWrapper
-        radius="none"
-        shadow="sm"
-        src={imageSrc}
-        alt="image preview"
-        onClick={() => openLinkAsNewTab(imageSrc)}
-      />
+      <a className="mx-auto block w-fit" href={imageSrc} target="_blank" rel="noopener noreferrer">
+        <Image
+          className="mx-auto block h-[120px] w-auto cursor-pointer"
+          removeWrapper
+          radius="none"
+          shadow="sm"
+          src={imageSrc}
+          alt="image preview"
+        />
+      </a>
+
       <MIMETypeAndSize mediaSrc={imageSrc} />
     </MediaViewerBox>
   );
