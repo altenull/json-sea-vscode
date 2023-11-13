@@ -213,16 +213,6 @@ class JsonSeaPanel {
     // Use a nonce to only allow specific scripts to be run
     const nonce = getNonce();
 
-    // <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-    // <meta name="theme-color" content="#000000">
-    // <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src vscode-resource: https:; script-src 'nonce-${nonce}';style-src vscode-resource: 'unsafe-inline' http: https: data:;">
-    // <base href="${vscode.Uri.file(path.join(context.extensionPath, 'build')).with({ scheme: 'vscode-resource' })}/">
-
-    /**
-     * [Content security policy]
-     * TODO: Need to check
-     * https://code.visualstudio.com/api/extension-guides/webview#content-security-policy
-     */
     return `
       <!DOCTYPE html>
         <html lang="en">
