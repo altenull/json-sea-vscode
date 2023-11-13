@@ -196,6 +196,7 @@ class JsonSeaPanel {
     const webview = this._panel.webview;
 
     this._panel.title = panelTitle;
+    this._panel.iconPath = vscode.Uri.file(path.join(this._extensionPath, 'build', 'jsonsea-icon.png'));
     this._panel.webview.html = this._getHtmlForWebview(webview);
   }
 
