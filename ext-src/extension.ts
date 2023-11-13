@@ -4,9 +4,14 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { StorageKey, StorageKeyToValueTypeMap } from '../src/services/storage.service';
 
-export type InitSettingItem = {
+export type SettingItem = {
   settingOption: StorageKey;
   value: StorageKeyToValueTypeMap<StorageKey>;
+};
+
+const defaultSettingItemValueMap: Record<StorageKey, boolean> = {
+  'settings:minimap': true,
+  'settings:nodePath': true,
 };
 
 export type WebviewMessage =
@@ -16,11 +21,11 @@ export type WebviewMessage =
     }
   | {
       command: 'init-settings'; // Extension(VS Code) -> React
-      settings: InitSettingItem[];
+      settings: SettingItem[];
     }
   | {
       command: 'update-setting'; // React -> Extension(VS Code)
-      setting: InitSettingItem;
+      setting: SettingItem;
     };
 
 // This method is called when your extension is activated
@@ -50,12 +55,13 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
   });
 
   const settings = ['settings:minimap', 'settings:nodePath'].map((storageKey) => {
-    const valueFromStorage = context.globalState.get<StorageKeyToValueTypeMap<StorageKey>>(storageKey);
+    const valueFromStorage = context.globalState.get<boolean>(storageKey);
+    const defaultValue = defaultSettingItemValueMap[storageKey as StorageKey] as boolean;
 
     return {
       settingOption: storageKey,
-      value: !!valueFromStorage,
-    } as InitSettingItem;
+      value: valueFromStorage ?? defaultValue,
+    } as SettingItem;
   });
 
   panel.webview.postMessage({

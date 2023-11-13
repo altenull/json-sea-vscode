@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { InitSettingItem } from '../../../ext-src/extension';
+import { SettingItem } from '../../../ext-src/extension';
 import { storageService } from '../../services/storage.service';
 
 type State = {
@@ -8,7 +8,7 @@ type State = {
 };
 
 type Actions = {
-  initSettings: (settings: InitSettingItem[]) => void;
+  initSettings: (settings: SettingItem[]) => void;
   toggleMinimap: () => void;
   toggleNodePath: () => void;
   resetSettingsStore: () => void;
@@ -21,7 +21,7 @@ const initialState: State = {
 
 export const useSettingsStore = create<State & Actions>((set, get) => ({
   ...initialState,
-  initSettings: (settings: InitSettingItem[]) => {
+  initSettings: (settings: SettingItem[]) => {
     const newState = settings.reduce(
       (acc: State, { settingOption, value }) =>
         settingOption === 'settings:minimap'
