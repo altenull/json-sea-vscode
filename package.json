@@ -1,15 +1,41 @@
 {
   "name": "json-sea-vscode",
   "displayName": "JSON Sea",
-  "description": "JSON Sea VS Code extension",
+  "description": "🌊 Dive deep into the JSON Sea!",
   "version": "0.0.1",
   "publisher": "altenull",
   "engines": {
     "vscode": "^1.84.0"
   },
   "categories": [
-    "Other"
+    "Visualization"
   ],
+  "keywords": [
+    "jsonsea",
+    "json",
+    "data",
+    "visualization",
+    "analyze",
+    "explorer",
+    "viewer"
+  ],
+  "author": {
+    "name": "Heonyoung Kim",
+    "email": "altenull@gmail.com"
+  },
+  "galleryBanner": {
+    "color": "#4C76A5",
+    "theme": "dark"
+  },
+  "icon": "public/jsonsea-icon.png",
+  "homepage": "https://jsonsea.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/altenull/json-sea-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/altenull/json-sea-vscode/issues"
+  },
   "activationEvents": [
     "onCommand:json-sea-vscode.run"
   ],
