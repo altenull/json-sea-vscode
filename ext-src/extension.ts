@@ -16,16 +16,25 @@ const defaultSettingItemValueMap: Record<StorageKey, boolean> = {
 
 export type WebviewMessage =
   | {
+      // Extension(VS Code) -> React
       command: 'json';
       jsonData: string;
+      fileName: string;
     }
   | {
-      command: 'init-settings'; // Extension(VS Code) -> React
+      // Extension(VS Code) -> React
+      command: 'init-settings';
       settings: SettingItem[];
     }
   | {
-      command: 'update-setting'; // React -> Extension(VS Code)
+      // React -> Extension(VS Code)
+      command: 'update-setting';
       setting: SettingItem;
+    }
+  | {
+      // React -> Extension(VS Code)
+      command: 'invalid-json';
+      warningMessage: string;
     };
 
 // This method is called when your extension is activated
@@ -72,6 +81,7 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
   panel.webview.postMessage({
     command: 'json',
     jsonData: currentTextEditor?.document.getText(),
+    fileName,
   } as WebviewMessage);
 
   // const onActiveEditorChange = vscode.window.onDidChangeActiveTextEditor(
@@ -116,6 +126,9 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
       switch (message.command) {
         case 'update-setting':
           context.globalState.update(message.setting.settingOption, message.setting.value);
+          return;
+        case 'invalid-json':
+          vscode.window.showWarningMessage(message.warningMessage);
           return;
       }
     },

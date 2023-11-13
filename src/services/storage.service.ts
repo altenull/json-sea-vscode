@@ -3,6 +3,7 @@
  * But VS Code extension doesn't have local storage, it changed to pass data to `extension.ts`.
  */
 import { WebviewMessage } from '../../ext-src/extension';
+import { SingletonAcquireVsCodeService } from './singleton-acquire-vscode-service';
 
 export type StorageKey = 'settings:minimap' | 'settings:nodePath';
 
@@ -24,11 +25,3 @@ export const storageService = {
     } as WebviewMessage);
   },
 };
-
-class SingletonAcquireVsCodeService {
-  private static instance = acquireVsCodeApi();
-
-  public static getInstance(): ReturnType<typeof acquireVsCodeApi> {
-    return SingletonAcquireVsCodeService.instance;
-  }
-}
