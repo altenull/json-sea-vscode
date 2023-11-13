@@ -4,6 +4,7 @@
   "description": "🌊 Dive deep into the JSON Sea!",
   "version": "0.0.1",
   "publisher": "altenull",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.84.0"
   },
