@@ -45,7 +45,8 @@
       {
         "command": "json-sea-vscode.run",
         "title": "Open with JSON Sea",
-        "enablement": "resourceExtname == .json || editorLangId == json"
+        "enablement": "resourceExtname == .json || editorLangId == json",
+        "category": "JSON Sea"
       }
     ],
     "menus": {
