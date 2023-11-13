@@ -11,11 +11,6 @@ export type SettingItem = {
   value: StorageKeyToValueTypeMap<StorageKey>;
 };
 
-const defaultSettingItemMap: Record<StorageKey, boolean> = {
-  'settings:minimap': true,
-  'settings:nodePath': true,
-};
-
 export type WebviewMessage =
   | {
       // Extension(VS Code) -> React
@@ -39,12 +34,47 @@ export type WebviewMessage =
       warningMessage: string;
     };
 
+type JsonFile = {
+  jsonData: string;
+  fileName: string;
+};
+
+const defaultSettingItemMap: Record<StorageKey, boolean> = {
+  'settings:minimap': true,
+  'settings:nodePath': true,
+};
+
 export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  const disposable = vscode.commands.registerCommand('json-sea-vscode.run', () => {
-    JsonSeaPanel.createOrShow(context);
+  const disposable = vscode.commands.registerCommand('json-sea-vscode.run', async (uri?: vscode.Uri) => {
+    /**
+     * If `uri` is not undefined, it means that this command was run from explorer directly. (Mouse right click)
+     */
+    if (uri !== undefined) {
+      try {
+        const fileContent = await vscode.workspace.fs.readFile(uri);
+
+        const jsonFileFromExplorer: JsonFile = {
+          jsonData: Buffer.from(fileContent).toString('utf-8'),
+          fileName: path.basename(uri.fsPath),
+        };
+
+        JsonSeaPanel.createOrShow(context, jsonFileFromExplorer);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      const currentTextEditor: vscode.TextEditor | undefined = vscode.window.visibleTextEditors[0];
+
+      const jsonFileFromTextEditor: JsonFile = {
+        jsonData: currentTextEditor?.document.getText(),
+        fileName: path.basename(currentTextEditor?.document.fileName),
+      };
+
+      JsonSeaPanel.createOrShow(context, jsonFileFromTextEditor);
+    }
   });
 
   context.subscriptions.push(disposable);
@@ -73,9 +103,8 @@ class JsonSeaPanel {
 
   private _disposables: vscode.Disposable[] = [];
 
-  public static createOrShow(context: vscode.ExtensionContext) {
-    const currentTextEditor: vscode.TextEditor | undefined = vscode.window.visibleTextEditors[0]; // 파일에서 바로 열때
-    const fileName = path.basename(currentTextEditor?.document.fileName);
+  public static createOrShow(context: vscode.ExtensionContext, jsonFile: JsonFile) {
+    const { jsonData, fileName } = jsonFile;
     const panelTitle = `JSON Sea (${fileName})`;
 
     // If we already have a panel, show it.
@@ -84,7 +113,7 @@ class JsonSeaPanel {
 
       JsonSeaPanel.currentPanel._panel.webview.postMessage({
         command: 'json',
-        jsonData: currentTextEditor?.document.getText(),
+        jsonData,
         fileName,
       } as WebviewMessage);
 
@@ -117,7 +146,7 @@ class JsonSeaPanel {
 
     panel.webview.postMessage({
       command: 'json',
-      jsonData: currentTextEditor?.document.getText(),
+      jsonData,
       fileName,
     } as WebviewMessage);
 
