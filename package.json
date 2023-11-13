@@ -1,7 +1,7 @@
 {
   "name": "json-sea-vscode",
-  "displayName": "JSON SEA",
-  "description": "JSON SEA VS Code extension",
+  "displayName": "JSON Sea",
+  "description": "JSON Sea VS Code extension",
   "version": "0.0.1",
   "publisher": "altenull",
   "engines": {
@@ -18,9 +18,26 @@
     "commands": [
       {
         "command": "json-sea-vscode.run",
-        "title": "View with JSON Sea"
+        "title": "Open with JSON Sea",
+        "enablement": "resourceExtname == .json || editorLangId == json"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "json-sea-vscode.run",
+          "group": "navigation@-JsonSea",
+          "when": "resourceLangId == json"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "json-sea-vscode.run",
+          "group": "myGrp@jsonSea",
+          "when": "resourceLangId == json"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run package",

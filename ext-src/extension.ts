@@ -46,7 +46,7 @@ async function diveDeepJsonSea(context: vscode.ExtensionContext) {
   const fileName = path.basename(currentTextEditor?.document.fileName);
 
   const WEBVIEW_VIEW_TYPE = 'jsonSeaWebview';
-  const TITLE = `JSON SEA (${fileName})`; // Title of the panel displayed to the user
+  const TITLE = `JSON Sea (${fileName})`; // Title of the panel displayed to the user
 
   const panel = vscode.window.createWebviewPanel(WEBVIEW_VIEW_TYPE, TITLE, vscode.ViewColumn.Active, {
     enableScripts: true,
