@@ -14,8 +14,7 @@
   "rules": {
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
-    "prefer-const": "off",
-    "@typescript-eslint/no-empty-function": "off"
+    "prefer-const": "off"
   },
   "ignorePatterns": ["build", "**/*.d.ts", "*.js"]
 }
