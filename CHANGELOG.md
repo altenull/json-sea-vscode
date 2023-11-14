@@ -1,9 +1,5 @@
-# Change Log
+# Changelog
 
-All notable changes to the "json-sea-vscode" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+| Version | Date       | Changelog                                        |
+| ------- | ---------- | ------------------------------------------------ |
+| 1.0.0   | 2023-11-14 | Reveal JSON Sea(VS Code Extension) to the world. |
