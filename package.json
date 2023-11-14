@@ -2,7 +2,7 @@
   "name": "json-sea-vscode",
   "displayName": "JSON Sea",
   "description": "🌊 Dive deep into the JSON Sea!",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "altenull",
   "license": "MIT",
   "engines": {
