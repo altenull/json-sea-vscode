@@ -13,6 +13,10 @@ export type SettingItem = {
 
 export type WebviewMessage =
   | {
+      // React -> Extension(VS Code)
+      command: 'webview-ready';
+    }
+  | {
       // Extension(VS Code) -> React
       command: 'json';
       jsonData: string;
@@ -156,20 +160,23 @@ class JsonSeaPanel {
       } as SettingItem;
     });
 
-    this._panel.webview.postMessage({
-      command: 'init-settings',
-      settings,
-    } as WebviewMessage);
-
-    this._panel.webview.postMessage({
-      command: 'json',
-      jsonData,
-      fileName,
-    } as WebviewMessage);
-
     this._panel.webview.onDidReceiveMessage(
       (message: WebviewMessage) => {
         switch (message.command) {
+          case 'webview-ready': {
+            this._panel.webview.postMessage({
+              command: 'init-settings',
+              settings,
+            } as WebviewMessage);
+
+            this._panel.webview.postMessage({
+              command: 'json',
+              jsonData,
+              fileName,
+            } as WebviewMessage);
+
+            return;
+          }
           case 'update-setting':
             context.globalState.update(message.setting.settingOption, message.setting.value);
             return;

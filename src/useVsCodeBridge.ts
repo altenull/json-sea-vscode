@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { WebviewMessage } from '../ext-src/extension';
 import { SingletonAcquireVsCodeService } from './services/singleton-acquire-vscode-service';
 import { useJsonEngineStore } from './store/json-engine/json-engine.store';
@@ -8,10 +8,19 @@ import { isValidJson } from './utils/json.util';
 export function useVsCodeBridge() {
   const setStringifiedJson = useJsonEngineStore((state) => state.setStringifiedJson);
   const initSettings = useSettingsStore((state) => state.initSettings);
+  const calledOnce = useRef(false);
 
   useEffect(() => {
     window.addEventListener('message', (event) => {
       const message = event.data as WebviewMessage;
+
+      if (!calledOnce.current) {
+        postMessage({
+          command: 'webview-ready',
+        } as WebviewMessage);
+
+        calledOnce.current = true;
+      }
 
       if (message.command === 'json') {
         if (isValidJson(message.jsonData)) {
