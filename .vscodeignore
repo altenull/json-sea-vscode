@@ -3,6 +3,8 @@ out/**
 node_modules/**
 src/**
 public/index.html
+public/jsonsea-vscode-light.gif
+public/jsonsea-vscode-dark.gif
 **/.eslintrc.json
 .gitignore
 .prettierignore
