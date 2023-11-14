@@ -44,6 +44,19 @@ const defaultSettingItemMap: Record<StorageKey, boolean> = {
   'settings:nodePath': true,
 };
 
+function formatPanelTitle(fileName: string) {
+  return `JSON Sea (${fileName})`;
+}
+
+function getNonce() {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 32; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+}
+
 export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
@@ -80,15 +93,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 }
 
-function getNonce() {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
-
 class JsonSeaPanel {
   /**
    * Track the currently panel. Only allow a single panel to exist at a time.
@@ -105,19 +109,17 @@ class JsonSeaPanel {
 
   public static createOrShow(context: vscode.ExtensionContext, jsonFile: JsonFile) {
     const { jsonData, fileName } = jsonFile;
-    const panelTitle = `JSON Sea (${fileName})`;
+    const panelTitle = formatPanelTitle(fileName);
 
     // If we already have a panel, show it.
     if (JsonSeaPanel.currentPanel !== undefined) {
+      JsonSeaPanel.currentPanel._panel.reveal(JsonSeaPanel.column);
       JsonSeaPanel.currentPanel._panel.title = panelTitle;
-
       JsonSeaPanel.currentPanel._panel.webview.postMessage({
         command: 'json',
         jsonData,
         fileName,
       } as WebviewMessage);
-
-      JsonSeaPanel.currentPanel._panel.reveal(JsonSeaPanel.column);
 
       return;
     }
@@ -129,6 +131,21 @@ class JsonSeaPanel {
       localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'build')],
     });
 
+    JsonSeaPanel.currentPanel = new JsonSeaPanel(panel, context, jsonFile);
+  }
+
+  private constructor(panel: vscode.WebviewPanel, context: vscode.ExtensionContext, jsonFile: JsonFile) {
+    const { jsonData, fileName } = jsonFile;
+    const panelTitle = formatPanelTitle(fileName);
+
+    this._panel = panel;
+    this._extensionPath = context.extensionPath;
+
+    this._initWebviewContent(panelTitle);
+
+    // This happens when the user closes the panel or when the panel is closed programmatically
+    this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
+
     const settings = ['settings:minimap', 'settings:nodePath'].map((storageKey) => {
       const valueFromStorage = context.globalState.get<boolean>(storageKey);
       const defaultValue = defaultSettingItemMap[storageKey as StorageKey] as boolean;
@@ -139,28 +156,16 @@ class JsonSeaPanel {
       } as SettingItem;
     });
 
-    panel.webview.postMessage({
+    this._panel.webview.postMessage({
       command: 'init-settings',
       settings,
     } as WebviewMessage);
 
-    panel.webview.postMessage({
+    this._panel.webview.postMessage({
       command: 'json',
       jsonData,
       fileName,
     } as WebviewMessage);
-
-    JsonSeaPanel.currentPanel = new JsonSeaPanel(panel, context, panelTitle);
-  }
-
-  private constructor(panel: vscode.WebviewPanel, context: vscode.ExtensionContext, panelTitle: string) {
-    this._panel = panel;
-    this._extensionPath = context.extensionPath;
-
-    this._initWebviewContent(panelTitle);
-
-    // This happens when the user closes the panel or when the panel is closed programmatically
-    this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
     this._panel.webview.onDidReceiveMessage(
       (message: WebviewMessage) => {
